@@ -50,13 +50,15 @@ RUN apt-get install -y \
     libcairo2-dev \
     libxt-dev
 
-# Download and install Shiny server
+# Download and install Shiny server pro
 # Cannot use ADD because using variables; Using wget instead
-RUN wget --no-verbose https://s3.amazonaws.com/rstudio-shiny-server-os-build/ubuntu-12.04/x86_64/VERSION -O "version.txt" && \
+RUN wget https://s3.amazonaws.com/rstudio-shiny-server-pro-build/ubuntu-12.04/x86_64/VERSION -O "version.txt" && \
     VERSION=$(cat version.txt)  && \
-    wget --no-verbose "https://s3.amazonaws.com/rstudio-shiny-server-os-build/ubuntu-12.04/x86_64/shiny-server-$VERSION-amd64.deb" -O ss-latest.deb && \
-    gdebi -n ss-latest.deb && \
-    rm -f version.txt ss-latest.deb
+    wget "https://s3.amazonaws.com/rstudio-shiny-server-pro-build/ubuntu-12.04/x86_64/shiny-server-commercial-$VERSION-amd64.deb" -O ssp-latest.deb && \
+    gdebi -n ssp-latest.deb && \
+    rm -f version.txt ssp-latest.deb
+
+RUN echo "password" | /opt/shiny-server/bin/sspasswd /etc/shiny-server/passwd "admin"    
 
 # Install shiny related packages
 RUN R -e "install.packages(c('rmarkdown', 'shiny'), repos='http://cran.rstudio.com/')"
